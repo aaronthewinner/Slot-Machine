@@ -3,91 +3,87 @@ public class SlotMachineSimulator
 {
    public static void main(String[]args)
    {
-         double totalOfTrials = 0;
-         int subFive = 0;
-         double maxTime = 0;
-         double minTime = 100000000;
-         for(int b = 0;b<10000;b++)
-      {
-      int sun = 25;
+int sunflowerdiff = 0;
+int sundiff = 1500;
+double globalTotal = 800;
+
+double totalOfTrials = 0;
+         for(int b = 0;b<10000;b++) {
+      int sun = 50;
       double totalTime = 0;
-      double spinnerTime = 0;
+      double spinnerTime = 4.27;
       int numSunsFallen = 0;
       double nextSunFromSky = Math.min(9.50, 4.25 + (numSunsFallen * .1)) + (Math.random() * 2.75);
       double sunSkyTime = 0;
-
-      ArrayList<Sunflower> a = new ArrayList<Sunflower>();
-      
-
-     
-
-      while(sun<2000)
-      {
-  
-  
-      if(sunSkyTime>=nextSunFromSky)//checking if sun from sky is available
-      {
+      List<Double> a = new ArrayList<>();
+      double peashooterextra = 100;
+      while(sun<2000){ 
+      if(sunSkyTime>=nextSunFromSky) {//checking if sun from sky is available
          sun+= 25;
          sunSkyTime = 0;
          numSunsFallen++;
          nextSunFromSky = Math.min(9.50, 4.25 + (numSunsFallen * .1)) + (Math.random() * 2.75);
-  
       }
-
-
-
-         if(spinnerTime>= 4.25 && sun>0)//checking if spinner is available
-         {
-            spinnerTime = 0;
-   
-            sun -= 25;
+      if(spinnerTime > 4.25 && spinnerTime < 4.26) {
+                 double jackpotchance = (100/(530+peashooterextra))*(100/(530+peashooterextra))*150/(580+peashooterextra);
+  
             double spinnerRNG = Math.random();
-                  
-            if(spinnerRNG < 0.1) // bonus sun
-            {
-               sun += 100;
-            }
-            if(spinnerRNG > 0.1 && spinnerRNG < 0.11)// sun jackpot
+            double bonuschance = (100/(530+peashooterextra))*(300/(530+peashooterextra))*(150/(630+peashooterextra))*2+(100/(530+peashooterextra))*(100/(530+peashooterextra))*((430+peashooterextra)/(580+peashooterextra))+(100/(530+peashooterextra))*30/(530+peashooterextra)*150/(580+peashooterextra)*2+(100/(530+peashooterextra))*((100+peashooterextra)/(530+peashooterextra))*(150/(630+peashooterextra*1.5))*2;
+            if(spinnerRNG < jackpotchance) // sun jackpot
             {
                sun += 500;
             }
-            if(spinnerRNG > 0.11 && spinnerRNG < 0.21)
+            if(spinnerRNG > jackpotchance && spinnerRNG < jackpotchance + bonuschance)// bonus sun
             {
-               a.add(new Sunflower());
+               sun += 100;
             }
-            if(spinnerRNG > 0.21 && spinnerRNG < 0.22)
+            if(spinnerRNG > jackpotchance + bonuschance && spinnerRNG < jackpotchance + bonuschance + bonuschance)
             {
-               a.add(new Sunflower());
-               a.add(new Sunflower());
-               a.add(new Sunflower());
+               a.add(Math.random()*9.5+3);
             }
-                     }
-                     for(int i =0;i<a.size();i++)
-                     {
-                        if(a.get(i).incrementTime())
-                        {
-                           sun += 25;
-                        }
-                     }
-          totalTime+=0.01;
-          sunSkyTime += 0.01;
-          spinnerTime+=0.01;
-
-
+            if(spinnerRNG > jackpotchance + bonuschance + bonuschance && spinnerRNG < jackpotchance + bonuschance + bonuschance + jackpotchance)
+            {
+               a.add(Math.random()*9.5+3);
+               a.add(Math.random()*9.5+3);
+               a.add(Math.random()*9.5+3);
+            }
+            if(peashooterextra != 0) {
+               double peashooterjackpot = ((100+peashooterextra)/(530+peashooterextra))*((100+peashooterextra)/(530+peashooterextra))*((150+peashooterextra*1.5)/(580+peashooterextra*1.5));
+               double peashooterbonus = ((100+peashooterextra)/(530+peashooterextra))*((100+peashooterextra)/(530+peashooterextra))*(430/(580+peashooterextra*1.5))+((100+peashooterextra)/(530+peashooterextra))*30/(530+peashooterextra)*(150+peashooterextra*1.5)/(580+peashooterextra*1.5)*2+((100+peashooterextra)/(530+peashooterextra))*(400/(530+peashooterextra))*((150+peashooterextra*1.5)/(630+peashooterextra*1.5))*2;
+               if(spinnerRNG > jackpotchance + bonuschance + bonuschance + jackpotchance && spinnerRNG < jackpotchance + bonuschance + bonuschance + jackpotchance + peashooterjackpot) {
+                  peashooterextra -= 60;
+                  if(peashooterextra < 0) {
+                     peashooterextra = 0;
+                  }
+               }
+               if(spinnerRNG > jackpotchance + bonuschance + bonuschance + jackpotchance + peashooterjackpot && spinnerRNG < jackpotchance + bonuschance + bonuschance + jackpotchance + peashooterjackpot + peashooterbonus) {
+                  peashooterextra -= 20;
+                  if(peashooterextra < 0) {
+                    peashooterextra = 0;
+                  }
+               }
+            }
+      }
+         if(spinnerTime>= 4.25 && sun>0 && sun<1900-100*a.size()) {//checking if spinner is available
+            spinnerTime = 0;
+             sun -= 25;
+         }
+         for(int i =0;i<a.size();i++) {
+            if(a.get(i) <= 0.0)
+            {
+                sun += 25;
+               a.set(i,Math.random()*1.5+23.5);
+            }
+            a.set(i,a.get(i) - 0.01);
+        }
+        totalTime+=0.01;
+        sunSkyTime += 0.01;
+        spinnerTime+=0.01;
       }
       totalTime += 9;
-               totalOfTrials += totalTime;
-               if(totalTime<=300)
-               subFive++;
-               if(totalTime<minTime)
-               minTime = totalTime;
-               if(totalTime>maxTime)
-               maxTime= totalTime;
-               }
-               System.out.println(totalOfTrials/10000);
-               System.out.println(subFive/10000.0);
-               System.out.println(minTime);
-               System.out.println(maxTime);
+      totalOfTrials += totalTime;
+      }
+System.out.println(totalOfTrials/10000.0);
    }
 
 }
